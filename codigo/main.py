@@ -1,20 +1,22 @@
-import numpy as np
-import sys
+
+from processos import gerencia_de_processos
 
 # para rodar
 # python3 main.py input.txt
 
-# pega o arquivo do terminal
-arquivo = sys.argv[1]
+# imagino que a main.py é o "kernel" que chama outros módulos?
+# ai teria que ter um módulo pra cada coisa e ir chamando dependendo do que o usuário quer?
 
-# abre e faz matriz
-with open(arquivo, 'r') as f:
-    input = [[int(num) for num in line.split(' ')] for line in f]
+# módulo de gerencia de processos
+#---------------------------------------------------
+
+processo = gerencia_de_processos()
 
 
-print(input)        # tudo
-print(input[0])     # primeira linha
-print(input[0][0])  # primeiro elemento, primeira linha
+# módulo de gerencia de memoria
+#---------------------------------------------------
 
-# começa aqui
+
+# módulo de gerencia de E/S
+#---------------------------------------------------
 
