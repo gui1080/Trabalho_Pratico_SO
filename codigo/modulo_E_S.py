@@ -16,16 +16,20 @@ def gerencia_de_entrada_saida():
     f.close()
 
     # inicializa a lista de requisitos para cada algoritmo
-    requisitions_SCAN = input.copy()
-    last_cilinder = input.pop(0)
-    requisitions_SSF = input.copy()
-    actual_cilinder = input.pop(0)
-    requisitions = input.copy()
-    requisitions_SCAN.append(0)
+    # inicializa variaveis ultimo_cilindro e cilindro_atual
+
+    pedidos_SCAN = input.copy()
+    ultimo_cilindro = input.pop(0)
+    pedidos_SSF = input.copy()
+    cilindro_atual = input.pop(0)
+    pedidos = input.copy()
+    pedidos_SCAN.append(0)
 
     # ordena a lista de requisitos para os algoritmos SSF e SCAN
-    requisitions_SSF.sort()
-    requisitions_SCAN.sort()
+    # o objetivo é facilitar o uso da funcao "calcula_distancia" para calcular a distancia entre
+    # o cilindro atual e os seus cilindros mais próximos
+    pedidos_SSF.sort()
+    pedidos_SCAN.sort()
 
     # funcao para calcular a distancia entre 2 pontos
     def Calcula_distancia(pontoA, pontoB):
@@ -37,74 +41,100 @@ def gerencia_de_entrada_saida():
 
             return pontoB - pontoA
 
-    # algoritmo FCFS
-    def FCFS(actual_cilinder, requisitions):
+    # algoritmo FCFS (First Come, First Serve)
+    # os pedidos são atendidos em ordem de chegada
+    def FCFS(cilindro_atual, pedidos):
 
-        total_value = 0
-        for i in range(len(requisitions)):
-            # print('cilindro atual', actual_cilinder,
-            #      'proxima requisicao', requisitions[i],)
+        resultado_FCFS = 0
+        for i in range(len(pedidos)):
 
-            total_value += Calcula_distancia(actual_cilinder, requisitions[i])
+            # calcula a distancia entre o pedido do cilindro atual e o que chegou imediatamente depois
+            resultado_FCFS += Calcula_distancia(cilindro_atual, pedidos[i])
 
-            actual_cilinder = requisitions[i]
+            cilindro_atual = pedidos[i]
 
-        print('FCFS', total_value)
+        print('FCFS', resultado_FCFS)
 
-    # algoritmo SSF
-    def SSF(actual_cilinder, requisitions_SSF):
+    # algoritmo SSF (Short Seek First)
+    # pedidos são atendidos de forma a minimizar o deslocamento do braço de leitura
+    def SSF(cilindro_atual, pedidos_SSF):
 
-        valor_total = 0
-        for i in range(len(requisitions_SSF)-1):
+        resultado_SSF = 0
+        for i in range(len(pedidos)):
 
-            index = requisitions_SSF.index(actual_cilinder)
-            valor_esquerda = Calcula_distancia(
-                requisitions_SSF[index], requisitions_SSF[index - 1])
-            valor_direita = Calcula_distancia(
-                requisitions_SSF[index], requisitions_SSF[index + 1])
+            # verifica qual e a menor distancia entre o cilindro atual e os cilindros pedidos
+            # para decidir se vai seguir pela direita ou esquerda
+            # processo se repete até o final da lista de pedidos de acesso
+            index = pedidos_SSF.index(cilindro_atual)
 
-            if(valor_esquerda < valor_direita):
-
-                valor_total += valor_esquerda
-                actual_cilinder = requisitions_SSF[index - 1]
+            # caso seja o ultimo valor da lista
+            if(index + 2 > len(pedidos_SSF)):
+                resultado_SSF += Calcula_distancia(
+                    pedidos_SSF[index], pedidos_SSF[index - 1])
+                cilindro_atual = pedidos_SSF[index - 1]
 
             else:
 
-                valor_total += valor_direita
-                actual_cilinder = requisitions_SSF[index + 1]
+                valor_esquerda = Calcula_distancia(
+                    pedidos_SSF[index], pedidos_SSF[index - 1])
+                valor_direita = Calcula_distancia(
+                    pedidos_SSF[index], pedidos_SSF[index + 1])
 
-            requisitions_SSF.pop(index)
+                if(valor_esquerda < valor_direita):
 
-        print('SSF', valor_total)
+                    resultado_SSF += valor_esquerda
+                    cilindro_atual = pedidos_SSF[index - 1]
+
+                else:
+
+                    resultado_SSF += valor_direita
+                    cilindro_atual = pedidos_SSF[index + 1]
+
+            pedidos_SSF.pop(index)
+
+        print('SSF', resultado_SSF)
 
     # algoritmo SCAN
-    def SCAN(last_cilinder, actual_cilinder, requisitions_SCAN):
+    # algoritmo atende todos os requisitos em uma direção até chegar a ponta
+    # a direção é invertida ao chegar na ponta para atender os pedidos restantes
+    def SCAN(ultimo_cilindro, cilindro_atual, pedidos_SCAN):
 
-        valor_total = 0
+        resultado_SCAN = 0
+
+        # algoritmo inicialmente começa no sentido esquerda->direita
         direcao_esquerda_direita = True
-        for i in range(len(requisitions_SCAN)-2):
 
-            index = requisitions_SCAN.index(actual_cilinder)
+        for i in range(len(pedidos)+1):
 
-            if(requisitions_SCAN[index] == 0):
+            # caso exista vários pedidos de acesso ao cilindro atual, o index ira apontar para o ultimo
+            index = pedidos_SCAN.index(cilindro_atual)
+
+            while(pedidos_SCAN[index] == pedidos_SCAN[index+1]):
+                index += 1
+
+            # direção é invertida ao chegar na ponta, se tornando direita->esquerda
+            if(pedidos_SCAN[index] == 0):
                 direcao_esquerda_direita = False
 
             if(direcao_esquerda_direita == True):
 
-                valor_total += Calcula_distancia(
-                    requisitions_SCAN[index], requisitions_SCAN[index-1])
-                actual_cilinder = requisitions_SCAN[index-1]
+                resultado_SCAN += Calcula_distancia(
+                    pedidos_SCAN[index], pedidos_SCAN[index-1])
+                cilindro_atual = pedidos_SCAN[index-1]
 
             else:
-                valor_total += Calcula_distancia(
-                    requisitions_SCAN[index], requisitions_SCAN[index+1])
-                actual_cilinder = requisitions_SCAN[index+1]
+                resultado_SCAN += Calcula_distancia(
+                    pedidos_SCAN[index], pedidos_SCAN[index+1])
+                cilindro_atual = pedidos_SCAN[index+1]
 
-            requisitions_SCAN.pop(index)
+            pedidos_SCAN.pop(index)
 
-        print('SCAN', valor_total)
+        print('SCAN', resultado_SCAN)
 
     # chamada das funções
-    FCFS(actual_cilinder, requisitions)
-    SSF(actual_cilinder, requisitions_SSF)
-    SCAN(last_cilinder, actual_cilinder, requisitions_SCAN)
+
+    FCFS(cilindro_atual, pedidos)
+    SSF(cilindro_atual, pedidos_SSF)
+    SCAN(ultimo_cilindro, cilindro_atual, pedidos_SCAN)
+
+    return 1
