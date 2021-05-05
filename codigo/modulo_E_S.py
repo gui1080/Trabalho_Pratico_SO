@@ -109,8 +109,11 @@ def gerencia_de_entrada_saida():
             # caso exista vários pedidos de acesso ao cilindro atual, o index ira apontar para o ultimo
             index = pedidos_SCAN.index(cilindro_atual)
 
-            while(pedidos_SCAN[index] == pedidos_SCAN[index+1]):
-                index += 1
+            if(pedidos_SCAN[index] == pedidos_SCAN[-1]):
+                index = len(pedidos_SCAN)-2
+            else:
+                while((pedidos_SCAN[index] == pedidos_SCAN[index+1])):
+                    index += 1
 
             # direção é invertida ao chegar na ponta, se tornando direita->esquerda
             if(pedidos_SCAN[index] == 0):
@@ -132,6 +135,8 @@ def gerencia_de_entrada_saida():
         print('SCAN', resultado_SCAN)
 
     # chamada das funções
+
+    print(pedidos_SCAN)
 
     FCFS(cilindro_atual, pedidos)
     SSF(cilindro_atual, pedidos_SSF)
