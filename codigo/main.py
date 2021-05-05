@@ -8,6 +8,7 @@
 
 import sys
 from processos import gerencia_de_processos
+from modulo_E_S import gerencia_de_entrada_saida
 
 # pega a operação da linha de comando
 op = sys.argv[1]
@@ -18,24 +19,23 @@ op = sys.argv[1]
 
 
 # módulo de gerencia de processos
-#---------------------------------------------------
+# ---------------------------------------------------
 
 if op == '1':
     processo = gerencia_de_processos()
 
 
 # módulo de gerencia de memoria
-#---------------------------------------------------
+# ---------------------------------------------------
 
-#if op == '2':
-
+if op == '2':
+    entrada_saida = gerencia_de_entrada_saida()
 
 # módulo de gerencia de E/S
-#---------------------------------------------------
+# ---------------------------------------------------
 
-#if op == '3':
+# if op == '3':
 
-
-#---------------------------------------------------
+# ---------------------------------------------------
 
 print('Fim da Execução')
