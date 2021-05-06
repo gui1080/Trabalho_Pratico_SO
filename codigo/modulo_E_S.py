@@ -101,31 +101,41 @@ def gerencia_de_entrada_saida():
 
         resultado_SCAN = 0
 
-        # algoritmo inicialmente começa no sentido esquerda->direita
-        direcao_esquerda_direita = True
+        # algoritmo inicialmente começa no sentido esquerda<-direita
+        direcao_esquerda_direita = False
 
-        for i in range(len(pedidos)+1):
+        for i in range(len(pedidos)):
 
+            # trata de casos de repetições de pedidos de acesso
             # caso exista vários pedidos de acesso ao cilindro atual, o index ira apontar para o ultimo
             index = pedidos_SCAN.index(cilindro_atual)
 
             if(pedidos_SCAN[index] == pedidos_SCAN[-1]):
                 index = len(pedidos_SCAN)-2
-            else:
+            elif(direcao_esquerda_direita == False):
                 while((pedidos_SCAN[index] == pedidos_SCAN[index+1])):
                     index += 1
 
-            # direção é invertida ao chegar na ponta, se tornando direita->esquerda
-            if(pedidos_SCAN[index] == 0):
-                direcao_esquerda_direita = False
+            # direção é invertida ao chegar na ponta, se tornando esquerda->direita
+            if(pedidos_SCAN[index-1] == 0):
 
-            if(direcao_esquerda_direita == True):
+                resultado_SCAN += Calcula_distancia(
+                    pedidos_SCAN[index], pedidos_SCAN[index-1])
+                cilindro_atual = pedidos_SCAN[index-1]
+                pedidos_SCAN.pop(index)
+                index -= index
+                direcao_esquerda_direita = True
 
+            if(direcao_esquerda_direita == False):
+
+                # sentido esquerda<-direita
                 resultado_SCAN += Calcula_distancia(
                     pedidos_SCAN[index], pedidos_SCAN[index-1])
                 cilindro_atual = pedidos_SCAN[index-1]
 
             else:
+
+                # sentido esquerda->direita
                 resultado_SCAN += Calcula_distancia(
                     pedidos_SCAN[index], pedidos_SCAN[index+1])
                 cilindro_atual = pedidos_SCAN[index+1]
@@ -135,8 +145,6 @@ def gerencia_de_entrada_saida():
         print('SCAN', resultado_SCAN)
 
     # chamada das funções
-
-    print(pedidos_SCAN)
 
     FCFS(cilindro_atual, pedidos)
     SSF(cilindro_atual, pedidos_SSF)
