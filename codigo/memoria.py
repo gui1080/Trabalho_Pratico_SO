@@ -1,4 +1,5 @@
 import sys
+import math
 
 def gerencia_de_memoria():
 
@@ -40,6 +41,7 @@ def gerencia_de_memoria():
         page_faults = 0
         victim_frame = 0
         r = []
+       # mem_counter = 0
 
         for i in range(len(accessed_pages)):
             if accessed_pages[i] not in current_pages:
@@ -47,6 +49,7 @@ def gerencia_de_memoria():
                     current_pages.append(accessed_pages[i])
                     r.append(1)
                     page_faults += 1
+                   # mem_counter += 1
                 else:
                     while True:
                         if r[victim_frame] == 0:
@@ -67,9 +70,42 @@ def gerencia_de_memoria():
             #print(f'{current_pages}   {accessed_pages[i]}')
 
         return page_faults
-    a = second_chance(max_pages, accessed_pages)
+    #a = second_chance(max_pages, accessed_pages)
     #print(a)
         
 
-    def lru():
-        pass
+    def lru(max_pages, current_pages):
+        current_pages = []
+        page_faults = 0
+        counter = []
+        counter_value = 0
+        swap_index = 0
+
+        for i in range(len(accessed_pages)):
+            if accessed_pages[i] not in current_pages:
+                if len(current_pages) < max_pages:
+                    current_pages.append(accessed_pages[i])
+                    counter.append(counter_value)
+                    counter_value += 1
+                    page_faults += 1
+                else:
+                    oldest = math.inf
+                    for k in range(max_pages):
+                        if counter[k] < oldest:
+                            oldest = counter[k]
+                            swap_index = k
+                    current_pages[swap_index] = accessed_pages[i]
+                    page_faults += 1
+                    counter[swap_index] = counter_value
+                    counter_value += 1                   
+            else:
+                for j in range(max_pages):
+                    if accessed_pages[i] == current_pages[j]:
+                        counter[j] = counter_value
+                        counter_value += 1
+                        break
+            print(f'{current_pages}   {accessed_pages[i]} \n{counter} \n')
+        return page_faults
+
+    #a = lru(max_pages, accessed_pages)
+    #print(a)
