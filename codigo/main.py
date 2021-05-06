@@ -9,6 +9,7 @@
 import sys
 from processos import gerencia_de_processos
 from modulo_E_S import gerencia_de_entrada_saida
+from memoria import gerencia_de_memoria
 
 # pega a operação da linha de comando
 op = sys.argv[1]
@@ -29,12 +30,13 @@ if op == '1':
 # ---------------------------------------------------
 
 if op == '2':
-    entrada_saida = gerencia_de_entrada_saida()
+    memoria = gerencia_de_memoria()
 
 # módulo de gerencia de E/S
 # ---------------------------------------------------
 
-# if op == '3':
+if op == '3':
+    entrada_saida = gerencia_de_entrada_saida()
 
 # ---------------------------------------------------
 
