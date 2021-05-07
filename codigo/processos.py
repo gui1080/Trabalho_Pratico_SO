@@ -1,6 +1,9 @@
 import sys
 
+# Exemplo de execução:
 # python3 main.py 1 input_GerenciadeProcessos.txt
+
+# Por favor não rodar arquivos com espaços desnecessários e quebra de linha ("\n") ao final.
 
 def gerencia_de_processos():
 
