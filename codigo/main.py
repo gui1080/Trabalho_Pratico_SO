@@ -30,7 +30,7 @@ if op == '1':
 # ---------------------------------------------------
 
 if op == '2':
-    memoria = gerencia_de_memoria()
+    gerencia_de_memoria()
 
 # módulo de gerencia de E/S
 # ---------------------------------------------------
