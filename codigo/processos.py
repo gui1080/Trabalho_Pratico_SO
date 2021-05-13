@@ -32,6 +32,8 @@ def gerencia_de_processos():
     for i in range(qntd):
         input_original_tempo.append(input[i][0])
 
+    # preciamos abrir o arquivo onde o resultado se encontra. Se ele já existe, overwrite. Se não existe, ele é criado.
+    f = open("gerencia_de_processos_RESULTADO.txt", "w")
 
     # FIFO  
     # ------------------------------------------------------------------
@@ -57,6 +59,8 @@ def gerencia_de_processos():
             for i in range(duracao):
                 print('No momento [', passagem, '] o processo [',  processo_atual,  '] está rodando')
                 passagem = passagem + 1
+
+                f.write('No momento [' + str(passagem) + '] o processo [' +  str(processo_atual) + '] está rodando\n')
 
             # o processo rodou e agora atualizamos o turnaround e a fila do que faltou
 
@@ -94,11 +98,8 @@ def gerencia_de_processos():
 
             break    
 
-    # preciamos abrir o arquivo onde o resultado se encontra. Se ele já existe, overwrite. Se não existe, ele é criado.
-    f = open("gerencia_de_processos_RESULTADO.txt", "w")
-
     # ao final, escrevemos no arquivo
-    resposta = 'FIFO ' + str(turnaround) + ' ' + str(resposta) + ' ' + str(resposta) + '\n' 
+    resposta = '\n\nFIFO ' + str(turnaround) + ' ' + str(resposta) + ' ' + str(resposta) + '\n\n' 
     f.write(resposta)
 
 
@@ -156,6 +157,7 @@ def gerencia_de_processos():
             # esse for é a nossa "CPU" rodando o processo
             for i in range(duracao):
                 print('No momento [', passagem, '] o processo [',  processo_atual,  '] está rodando')
+                f.write('No momento [' + str(passagem) + '] o processo [' +  str(processo_atual) + '] está rodando\n')
                 passagem = passagem + 1
             
             turnaround = turnaround + (passagem - input_sjf[candidato_atual][0])
@@ -193,7 +195,7 @@ def gerencia_de_processos():
             break    
 
     # ao final, escrevemos no arquivo
-    resposta = 'SJF ' + str(turnaround) + ' ' + str(resposta) + ' ' + str(resposta) + '\n' 
+    resposta = '\n\nSJF ' + str(turnaround) + ' ' + str(resposta) + ' ' + str(resposta) + '\n\n' 
     f.write(resposta)
 
     # RoundRobin  
@@ -232,6 +234,7 @@ def gerencia_de_processos():
         if(podemos_executar == False):
             
             print('A CPU ficou sem nada para fazer na passagem ', passagem)
+            f.write('A CPU ficou sem nada para fazer na passagem ' + str(passagem) + '\n')
             passagem = passagem + 1
 
         # se o processo já chegou na nossa passagem, vamos adiante
@@ -243,12 +246,14 @@ def gerencia_de_processos():
                 # descobrimos se é a primeira vez dele rodando, para ver o tempo que demorou para dar a resposta
                 if(processo_atual not in processos_tratados):
                     print('Primeira vez por aqui, não é mesmo?')
+                    f.write('Primeira vez por aqui, não é mesmo?\n')
                     resposta = resposta + ((passagem+1) - input_rr[processo_atual][0])
                     processos_tratados.append(processo_atual)
                 
                 # esse for é a nossa "CPU" rodando o processo
                 for i in range(duracao - 1):
                     print('No momento [', passagem, '] o processo [',  processo_atual,  '] está rodando')
+                    f.write('No momento [' + str(passagem) + '] o processo [' +  str(processo_atual) + '] está rodando\n')
                     passagem = passagem + 1
                 
                 # atualizamos o quanto falta daquele processo
@@ -277,12 +282,14 @@ def gerencia_de_processos():
                 # descobrimos se é a primeira vez dele rodando, para ver o tempo que demorou para dar a resposta
                 if(processo_atual not in processos_tratados):
                     print('Primeira vez por aqui, não é mesmo?')
+                    f.write('Primeira vez por aqui, não é mesmo?\n')
                     resposta = resposta + ((passagem+1) - input_rr[processo_atual][0])
                     processos_tratados.append(processo_atual)
 
                 # esse for é a nossa "CPU" rodando o processo
                 for i in range(duracao):
                     print('No momento [', passagem, '] o processo [',  processo_atual,  '] está rodando')
+                    f.write('No momento [' + str(passagem) + '] o processo [' +  str(processo_atual) + '] está rodando\n')
                     passagem = passagem + 1
                 
                 # atualizamos o quanto falta daquele processo
@@ -355,7 +362,7 @@ def gerencia_de_processos():
             break    
 
     # ao final, escrevemos no arquivo
-    resposta = 'RR ' + str(turnaround) + ' ' + str(resposta) + ' ' + str(espera) + '\n' 
+    resposta = '\n\nRR ' + str(turnaround) + ' ' + str(resposta) + ' ' + str(espera) + '\n\n' 
     f.write(resposta)
 
     # fechamos o arquivo
