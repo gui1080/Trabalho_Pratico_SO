@@ -51,9 +51,6 @@ def second_chance(max_pages, accessed_pages):
         #and set the new page's r bit to 1.
             else:
                 while True: #checks all loaded pages until it finds a page that can be replaced (R bit set to 0)
-                    mem_counter += 1 
-                    if mem_counter % 3 == 0:
-                        r = [0 for z in range(max_pages)]
                     if r[victim_frame] == 0: #checks if the page can be replaced, starting at the victim frames's index
                         current_pages[victim_frame] = accessed_pages[i]
                         page_faults += 1
