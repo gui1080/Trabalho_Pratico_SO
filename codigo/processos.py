@@ -38,6 +38,7 @@ def gerencia_de_processos():
     # FIFO  
     # ------------------------------------------------------------------
     
+    f.write("FIFO\n")
     passagem = 0
     processo_atual = 0
     resposta = 0
@@ -55,13 +56,11 @@ def gerencia_de_processos():
             # tempo que a cpu vai ficar ocupada com aquele processo
             duracao = input_fifo[0][1]
 
+            f.write('Rodar processo [' + str(processo_atual) + '] de [' +  str(passagem) + '] até ['+str(passagem+duracao)+']\n')
             # esse for é a nossa "CPU" rodando o processo
             for i in range(duracao):
-                print('No momento [', passagem, '] o processo [',  processo_atual,  '] está rodando')
                 passagem = passagem + 1
-
-                f.write('No momento [' + str(passagem) + '] o processo [' +  str(processo_atual) + '] está rodando\n')
-
+            
             # o processo rodou e agora atualizamos o turnaround e a fila do que faltou
 
             turnaround = turnaround + (passagem - input_fifo[0][0])
@@ -69,18 +68,12 @@ def gerencia_de_processos():
             input_fifo.pop(0)
             processo_atual = processo_atual + 1
 
-            print('\nSobrou então:')
-            print(input_fifo)
-            print('\n')
-
         # else/if se ninguem rodou e ainda temos processos a rodar, a cpu ficou sem o que fazer esperando o processo
         elif(len(input_fifo) != 0):
-            print('Ninguém chegou ainda na CPU')
             passagem = passagem + 1
 
         # não tem mais nada na fila para rodar!
         if(len(input_fifo) == 0):
-            print('Fim do FIFO!\n')
 
             # acumulamos a resposta e o turnaround, dividimos pela quantidade e pegamos a média
             resposta = resposta / qntd
@@ -90,23 +83,18 @@ def gerencia_de_processos():
             turnaround = round(turnaround, 2)
             resposta = round(resposta, 2)
 
-            print('Turnaround: ', turnaround)
-            print('Tempo total de execução: ', passagem)
-            print('Tempo de espera: ', resposta)
-            print('Tempo de resposta: ', resposta)
-            print('\n\n')
+            print('FIFO: ', turnaround, resposta, resposta)
 
             break    
 
     # ao final, escrevemos no arquivo
     resposta = '\n\nFIFO ' + str(turnaround) + ' ' + str(resposta) + ' ' + str(resposta) + '\n\n' 
-    f.write(resposta)
 
 
     # SJF  
     # ------------------------------------------------------------------
 
-    print(input_sjf)    
+    f.write("SJF\n")
     
     passagem = 0
     processo_atual = 0
@@ -154,10 +142,9 @@ def gerencia_de_processos():
 
             resposta = resposta + (passagem - input_sjf[candidato_atual][0])
             
+            f.write('Rodar processo [' + str(processo_atual) + '] de [' +  str(passagem) + '] até ['+str(passagem+duracao)+']\n')
             # esse for é a nossa "CPU" rodando o processo
             for i in range(duracao):
-                print('No momento [', passagem, '] o processo [',  processo_atual,  '] está rodando')
-                f.write('No momento [' + str(passagem) + '] o processo [' +  str(processo_atual) + '] está rodando\n')
                 passagem = passagem + 1
             
             turnaround = turnaround + (passagem - input_sjf[candidato_atual][0])
@@ -171,12 +158,10 @@ def gerencia_de_processos():
         # não tinha ninguém para rodar, vamos para a próxima passagem
         else:
             
-            print('Ninguém chegou ainda na CPU')
             passagem = passagem + 1
 
         # acabou a lista de processos a serem executados!
         if(len(input_sjf) == 0):
-            print('Fim do SJF!\n')
 
             # acumulamos a resposta e o turnaround, dividimos pela quantidade e pegamos a média
             resposta = resposta / qntd
@@ -186,22 +171,17 @@ def gerencia_de_processos():
             turnaround = round(turnaround, 2)
             resposta = round(resposta, 2)
 
-            print('Turnaround: ', turnaround)
-            print('Tempo total de execução: ', passagem)
-            print('Tempo de espera: ', resposta)
-            print('Tempo de resposta: ', resposta)
-            print('\n\n')
+            print('SJF: ', turnaround, resposta, resposta)
 
             break    
 
     # ao final, escrevemos no arquivo
     resposta = '\n\nSJF ' + str(turnaround) + ' ' + str(resposta) + ' ' + str(resposta) + '\n\n' 
-    f.write(resposta)
 
     # RoundRobin  
     # ------------------------------------------------------------------
+    f.write("RR\n")
 
-    print(input_rr)    
     
     passagem = 0
     processo_atual = 0
@@ -233,8 +213,6 @@ def gerencia_de_processos():
 
         if(podemos_executar == False):
             
-            print('A CPU ficou sem nada para fazer na passagem ', passagem)
-            f.write('A CPU ficou sem nada para fazer na passagem ' + str(passagem) + '\n')
             passagem = passagem + 1
 
         # se o processo já chegou na nossa passagem, vamos adiante
@@ -245,15 +223,12 @@ def gerencia_de_processos():
 
                 # descobrimos se é a primeira vez dele rodando, para ver o tempo que demorou para dar a resposta
                 if(processo_atual not in processos_tratados):
-                    print('Primeira vez por aqui, não é mesmo?')
-                    f.write('Primeira vez por aqui, não é mesmo?\n')
                     resposta = resposta + ((passagem+1) - input_rr[processo_atual][0])
                     processos_tratados.append(processo_atual)
                 
+                f.write('Rodar processo [' + str(processo_atual) + '] de [' +  str(passagem) + '] até ['+str(passagem+duracao)+']\n')
                 # esse for é a nossa "CPU" rodando o processo
-                for i in range(duracao - 1):
-                    print('No momento [', passagem, '] o processo [',  processo_atual,  '] está rodando')
-                    f.write('No momento [' + str(passagem) + '] o processo [' +  str(processo_atual) + '] está rodando\n')
+                for i in range(duracao):
                     passagem = passagem + 1
                 
                 # atualizamos o quanto falta daquele processo
@@ -262,7 +237,6 @@ def gerencia_de_processos():
                 # checamos se terminou aquele processo
                 if(input_rr[processo_atual][1] == 0):
                     contagem_processos_terminados = contagem_processos_terminados + 1
-                    print(contagem_processos_terminados)
                     processos_terminados.append(processo_atual)
 
                     turnaround = turnaround + ((passagem+1) - input_rr[processo_atual][0])
@@ -281,15 +255,12 @@ def gerencia_de_processos():
 
                 # descobrimos se é a primeira vez dele rodando, para ver o tempo que demorou para dar a resposta
                 if(processo_atual not in processos_tratados):
-                    print('Primeira vez por aqui, não é mesmo?')
-                    f.write('Primeira vez por aqui, não é mesmo?\n')
                     resposta = resposta + ((passagem+1) - input_rr[processo_atual][0])
                     processos_tratados.append(processo_atual)
 
+                f.write('Rodar processo [' + str(processo_atual) + '] de [' +  str(passagem) + '] até ['+str(passagem+duracao)+']\n')
                 # esse for é a nossa "CPU" rodando o processo
                 for i in range(duracao):
-                    print('No momento [', passagem, '] o processo [',  processo_atual,  '] está rodando')
-                    f.write('No momento [' + str(passagem) + '] o processo [' +  str(processo_atual) + '] está rodando\n')
                     passagem = passagem + 1
                 
                 # atualizamos o quanto falta daquele processo
@@ -301,12 +272,9 @@ def gerencia_de_processos():
 
                     # adicionamos 1 no contador de processos que terminaram
                     contagem_processos_terminados = contagem_processos_terminados + 1
-                    print(contagem_processos_terminados)
-                    print(input_rr)
 
                     # adicionamos na lista de processos terminados aquele em específico
                     processos_terminados.append(processo_atual)
-                    print(processos_terminados)
 
                     turnaround = turnaround + ((passagem+1) - input_rr[processo_atual][0])
                     espera = espera + ((passagem+1) - input_original_chegada[processo_atual] - input_original_tempo[processo_atual])
@@ -341,7 +309,6 @@ def gerencia_de_processos():
         #print(qntd)
 
         if(contagem_processos_terminados == qntd):
-            print('Fim do RoundRobin!\n')
 
             # acumulamos a resposta e o turnaround, dividimos pela quantidade e pegamos a média
             resposta = resposta / qntd
@@ -353,17 +320,12 @@ def gerencia_de_processos():
             resposta = round(resposta, 2)
             espera = round(espera, 2)
 
-            print('Turnaround: ', turnaround)
-            print('Tempo total de execução: ', passagem)
-            print('Tempo de espera: ', espera)
-            print('Tempo de resposta: ', resposta)
-            print('\n\n')
+            print('RR: ', turnaround, resposta, espera)
 
             break    
 
     # ao final, escrevemos no arquivo
     resposta = '\n\nRR ' + str(turnaround) + ' ' + str(resposta) + ' ' + str(espera) + '\n\n' 
-    f.write(resposta)
 
     # fechamos o arquivo
     f.close()
