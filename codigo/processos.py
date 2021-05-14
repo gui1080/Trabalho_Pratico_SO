@@ -228,7 +228,7 @@ def gerencia_de_processos():
                 
                 f.write('Rodar processo [' + str(processo_atual) + '] de [' +  str(passagem) + '] até ['+str(passagem+duracao)+']\n')
                 # esse for é a nossa "CPU" rodando o processo
-                for i in range(duracao):
+                for i in range(duracao-1):
                     passagem = passagem + 1
                 
                 # atualizamos o quanto falta daquele processo
