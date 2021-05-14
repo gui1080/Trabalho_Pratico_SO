@@ -39,5 +39,3 @@ if op == '3':
     entrada_saida = gerencia_de_entrada_saida()
 
 # ---------------------------------------------------
-
-print('Fim da Execução')
