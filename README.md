@@ -17,3 +17,7 @@ Com x igual a 1, será acionada a gerência de processos. Já com x igual a 2, �
 # Exemplo
 
 > python3 main.py 1 input_GerenciadeProcessos.txt
+
+# Link no Github
+
+https://github.com/gui1080/Trabalho_Pratico_SO
