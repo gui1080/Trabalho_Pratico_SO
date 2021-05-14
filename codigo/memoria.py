@@ -140,6 +140,6 @@ def gerencia_de_memoria():
     second_chance_page_faults = second_chance(max_pages, accessed_pages)
     lru_page_faults = lru(max_pages, accessed_pages)
 
-    print(f'FIFO: {fifo_page_faults}')
-    print(f'SECOND CHANCE: {second_chance_page_faults}')
-    print(f'LRU: {lru_page_faults}')
+    print(f'FIFO {fifo_page_faults}')
+    print(f'SC {second_chance_page_faults}')
+    print(f'LRU {lru_page_faults}')
